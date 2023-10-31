@@ -1,0 +1,21 @@
+spring:
+  profiles:
+    group:
+      local:
+        - local
+    active: local
+  devtools:
+    livereload:
+      enabled: true
+  restart:
+    enabled: true
+  jpa:
+    open-in-view: true
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        default_batch_fetch_size: 500
