@@ -4,8 +4,6 @@ import com.example.beproject.entity.member.MemberEntity;
 import lombok.Builder;
 import lombok.Getter;
 
-import javax.persistence.*;
-
 @Getter
 public class Member {
 
