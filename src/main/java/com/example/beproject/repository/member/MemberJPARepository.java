@@ -10,5 +10,5 @@ import java.util.Optional;
 
 public interface MemberJPARepository extends JpaRepository<MemberEntity, Long> {
 
-
+    public MemberEntity findByEmail(String email);
 }

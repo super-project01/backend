@@ -38,6 +38,7 @@ public class MemberEntity {
         this.status = status;
     }
 
+    // DTO to Entity
     public static MemberEntity from(Member member){
         return MemberEntity.builder()
                 .id(member.getId())
@@ -48,6 +49,7 @@ public class MemberEntity {
                 .build();
     }
 
+    // Entity to DTO
     public Member toDTO(){
         return Member.builder()
                 .id(this.id)

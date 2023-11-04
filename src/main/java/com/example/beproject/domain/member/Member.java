@@ -22,6 +22,7 @@ public class Member {
         this.status = status;
     }
 
+    //Entity to DTO
     public static Member from(MemberEntity member){
         return Member.builder()
                 .id(member.getId())

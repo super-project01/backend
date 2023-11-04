@@ -28,4 +28,9 @@ public class MemberRepositoryImpl implements MemberRepository{
     public Optional<Member> findById(long id) {
         return Optional.empty();
     }
+
+    @Override
+    public Member findByEmail(String email) {
+        return memberJPARepository.findByEmail(email).toDTO();
+    }
 }
