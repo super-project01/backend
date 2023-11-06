@@ -31,6 +31,7 @@ public class MemberRepositoryImpl implements MemberRepository{
 
     @Override
     public Member findByEmail(String email) {
-        return memberJPARepository.findByEmail(email).toDTO();
+        MemberEntity member = memberJPARepository.findByEmail(email);
+        return member.toDTO();
     }
 }
