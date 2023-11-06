@@ -2,12 +2,14 @@ package com.example.beproject.entity.post;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
 @Table(name="post")
+@NoArgsConstructor
 public class PostEntity {
 
     @Id
