@@ -1,6 +1,6 @@
 package com.example.beproject.config;
 
-import com.example.beproject.domain.jwt.JwtProvider;
+import com.example.beproject.domain.jwt.*;
 import com.example.beproject.service.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @RequiredArgsConstructor
@@ -22,6 +23,7 @@ public class SecurityConfig {
 
     private final JwtProvider jwtProvider;
     private final JwtService jwtService;
+    private final JwtExceptionFilter jwtExceptionFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -46,10 +48,15 @@ public class SecurityConfig {
                 .antMatchers("/api/comment").permitAll()
                 .antMatchers(HttpMethod.POST,"/api/comment/**").permitAll()
                 .antMatchers(HttpMethod.PUT,"/api/comment/**").permitAll()
-                .antMatchers(HttpMethod.DELETE,"/api/comment/**").permitAll();
+                .antMatchers(HttpMethod.DELETE,"/api/comment/**").permitAll()
+
+                .and()
+                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider, jwtService), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtExceptionFilter,JwtAuthenticationFilter.class);
 
         http
-                .apply(new JwtSecurtityConfig(jwtProvider, jwtService));
+                .exceptionHandling()
+                .accessDeniedHandler(new JwtAccessDeniedHandler());
 
 
         return http.build();

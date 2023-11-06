@@ -71,16 +71,19 @@ public class JwtProvider {
 
         claims.put(EMAIL_CLAIMS, authentication.getName());
 
+
         // JWT 시간 설정
         long now = (new Date()).getTime();
 
         // AccessToken 생성
         Date accessTokenExpire = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
+        claims.put("exp", accessTokenExpire);
         String accessToken = createAccessToken(claims, accessTokenExpire);
 
         // RefreshToken 생성
         Date refreshTokenExpire = new Date(now + REFRESH_TOKEN_EXPIRE_TIME);
-        String refreshToken = createRefreshToken(refreshTokenExpire);
+        claims.put("exp", refreshTokenExpire);
+        String refreshToken = createRefreshToken(claims, refreshTokenExpire);
 
         Token token = Token.builder()
                 .grantType("Bearer ")
@@ -107,7 +110,7 @@ public class JwtProvider {
     }
 
     // RefreshToken 생성
-    public String createRefreshToken(Date expiredTime) {
+    public String createRefreshToken(Map<String, Object> claims, Date expiredTime) {
         long now = new Date().getTime();
         return Jwts.builder()
                 .setSubject(SUBJECT_REFRESH)
@@ -182,8 +185,10 @@ public class JwtProvider {
 
     //refreshToken재발급
     public String reIssueRefreshToken(Date expiredTime){
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("exp", expiredTime);
 
-        return createRefreshToken(expiredTime);
+        return createRefreshToken(claims, expiredTime);
     }
 /*
     // JWT 토큰을 복호화하여 토큰에 들어있는 정보를 꺼내는 코드
@@ -236,13 +241,26 @@ public class JwtProvider {
                     .parseClaimsJws(token);
 
             return true;
+        }
+        catch (SignatureException e) {
+            log.info("SignatureException");
+            throw new JwtException(ErrorMessage.WRONG_TYPE_TOKEN.getMsg());
+        } catch (MalformedJwtException e) {
+            log.info("MalformedJwtException");
+            throw new JwtException(ErrorMessage.UNSUPPORTED_TOKEN.getMsg());
         } catch (ExpiredJwtException e) {
+            log.info("ExpiredJwtException");
+            throw new JwtException(ErrorMessage.EXPIRED_TOKEN.getMsg());
+        } catch (IllegalArgumentException e) {
+            log.info("IllegalArgumentException");
+            throw new JwtException(ErrorMessage.UNKNOWN_ERROR.getMsg());
+        }/*catch (ExpiredJwtException e) {
             log.error("만료된 토큰입니다.");
             return false;
         } catch (SecurityException | MalformedJwtException
                  | IllegalArgumentException | UnsupportedJwtException e) {
             log.error("올바르지 않은 토큰입니다.");
             return false;
-        }
+        }*/
     }
 }
