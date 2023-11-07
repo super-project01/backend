@@ -242,10 +242,7 @@ public class JwtProvider {
 
             return true;
         }
-        catch (SignatureException e) {
-            log.info("SignatureException");
-            throw new JwtException(ErrorMessage.WRONG_TYPE_TOKEN.getMsg());
-        } catch (MalformedJwtException e) {
+        catch (MalformedJwtException e) {
             log.info("MalformedJwtException");
             throw new JwtException(ErrorMessage.UNSUPPORTED_TOKEN.getMsg());
         } catch (ExpiredJwtException e) {
@@ -254,13 +251,6 @@ public class JwtProvider {
         } catch (IllegalArgumentException e) {
             log.info("IllegalArgumentException");
             throw new JwtException(ErrorMessage.UNKNOWN_ERROR.getMsg());
-        }/*catch (ExpiredJwtException e) {
-            log.error("만료된 토큰입니다.");
-            return false;
-        } catch (SecurityException | MalformedJwtException
-                 | IllegalArgumentException | UnsupportedJwtException e) {
-            log.error("올바르지 않은 토큰입니다.");
-            return false;
-        }*/
+        }
     }
 }

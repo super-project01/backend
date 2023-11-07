@@ -24,3 +24,8 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      force-response: true

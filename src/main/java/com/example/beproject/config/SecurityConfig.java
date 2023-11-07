@@ -38,6 +38,7 @@ public class SecurityConfig {
         http
                 .authorizeRequests()
                 .antMatchers("/api/member").permitAll()
+                .antMatchers("/api/member/").permitAll()
                 .antMatchers(HttpMethod.POST,"/api/member/**").permitAll()
                 .antMatchers(HttpMethod.PUT,"/api/member/**").permitAll()
                 .antMatchers(HttpMethod.DELETE,"/api/member/**").permitAll()

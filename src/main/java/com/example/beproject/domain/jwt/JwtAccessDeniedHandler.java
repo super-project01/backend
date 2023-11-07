@@ -16,7 +16,6 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
                        HttpServletResponse response,
                        AccessDeniedException accessDeniedException)
             throws IOException, ServletException {
-        response.sendError(HttpServletResponse.SC_FORBIDDEN);
-        response.getWriter().write("권한이 없는 사용자입니다.");
+        response.sendError(HttpServletResponse.SC_FORBIDDEN, ErrorMessage.AUTHORIZE_DENIED.getMessages());
     }
 }
