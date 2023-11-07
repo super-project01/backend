@@ -25,6 +25,12 @@ public class SecurityConfig {
     private final JwtService jwtService;
     private final JwtExceptionFilter jwtExceptionFilter;
 
+    private static final String[] PERMIT_URL_ARRAY = {
+            /* swagger v3 */
+            "/v3/api-docs/**",
+            "/swagger-ui/**"
+    };
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -37,8 +43,10 @@ public class SecurityConfig {
 
         http
                 .authorizeRequests()
+
                 .antMatchers("/api/member").permitAll()
-                .antMatchers("/api/member/").permitAll()
+                .antMatchers("/api/member/**").permitAll()
+                .antMatchers(PERMIT_URL_ARRAY).permitAll()
                 .antMatchers(HttpMethod.POST,"/api/member/**").permitAll()
                 .antMatchers(HttpMethod.PUT,"/api/member/**").permitAll()
                 .antMatchers(HttpMethod.DELETE,"/api/member/**").permitAll()

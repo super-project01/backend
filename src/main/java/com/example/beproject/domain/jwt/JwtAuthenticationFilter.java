@@ -10,6 +10,7 @@ import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMap
 import org.springframework.security.core.authority.mapping.NullAuthoritiesMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.PatternMatchUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -23,8 +24,9 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final String NO_CHECK_URL = "/api/member/login";
-
+    private static final String[] whitelist = {"/api/member/login","/api/member/join", "/api/member/logout","/api/member/login/**","/api/member/join/**",
+                                                "/api/member/test","/swagger-ui","/swagger-ui/*", "/swagger-resources/**"};
+    private final String TEST_NONCHECK_URL = "/";
     private final JwtProvider jwtProvider;
     private final JwtService jwtService;
 
@@ -33,7 +35,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        if(request.getRequestURI().equals(NO_CHECK_URL)) {
+        if(checkPathFree(request.getRequestURI())){
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        // 개발용 SpringSecurity 인증/인가 제외하기
+        if(request.getRequestURI().contains(TEST_NONCHECK_URL)){
             filterChain.doFilter(request, response);
             return;
         }
@@ -51,6 +59,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             //refreshToken이 없다면 accessToken을 재발급하고 인가
             checkAccessTokenAndAuthentication(request, response, filterChain);
         }
+    }
+
+    public boolean checkPathFree(String requestURI){
+        return PatternMatchUtils.simpleMatch(whitelist, requestURI);
     }
 
     public void checkAccessTokenAndAuthentication(HttpServletRequest request, HttpServletResponse response,
