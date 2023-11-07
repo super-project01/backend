@@ -5,6 +5,8 @@ import com.example.beproject.entity.post.PostEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 @RequiredArgsConstructor
 public class PostRepositoryImpl implements PostRepository {
@@ -13,6 +15,11 @@ public class PostRepositoryImpl implements PostRepository {
 
     @Override
     public Post save(Post post) {
+        return null;
+    }
+
+    @Override
+    public List<Post> findAll() {
         return null;
     }
 }
