@@ -16,7 +16,7 @@ public class PostEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "post_id")//혹시 이거 넣어주실 수 있는지 ㅠ
+    @Column(name = "post_id")
     private Long id;
 
     @Column(name="post_subject")
