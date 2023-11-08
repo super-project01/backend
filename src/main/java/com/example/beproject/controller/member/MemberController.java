@@ -7,6 +7,7 @@ import com.example.beproject.domain.member.CreateMember;
 import com.example.beproject.domain.member.LoginMember;
 import com.example.beproject.domain.member.Member;
 import com.example.beproject.domain.member.UpdateMember;
+import com.example.beproject.exception.MemberNotFoundException;
 import com.example.beproject.service.member.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -60,39 +61,26 @@ public class MemberController {
         }
     }
 
+
     // 회원 정보 수정
     @PutMapping("/id")
     @Tag(name = "MEMBER")
     @Operation(summary = "회원 정보 수정", description = "회원 정보 수정 API")
     public ResponseEntity<?> updateMember(@PathVariable Long id, @Validated @RequestBody UpdateMember updateMember, BindingResult result) {
+        if (result.hasErrors()) {
+            log.info("BindingResult error: " + result.getAllErrors());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result.getAllErrors());
+        }
 
         try {
-            if (result.hasErrors()) {
-                log.info("BindingResult error: " + result.getAllErrors());
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result.getAllErrors());
-            }
-
-            // 해당 ID 존재 확인
-            Member existingMember = memberService.findById(id);
-
-            if (existingMember == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("회원을 찾을 수 없습니다.");
-            }
-
-            // 회원정보 업데이트
-            existingMember.setNickname(updateMember.getNickname());
-            existingMember.setEmail(updateMember.getEmail());
-            existingMember.setPassword(updateMember.getPassword());
-
-            // 업데이트된 Member 저장
-            Member updatedMember = memberService.update(existingMember);
-
+            Member updatedMember = memberService.updateMember(id, updateMember);
             return ResponseEntity.ok().body(ResponseMember.of(updatedMember));
+        } catch (MemberNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
-
 
     // 로그인
     @PostMapping("/login")

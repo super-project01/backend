@@ -3,21 +3,13 @@ package com.example.beproject.service.member;
 import com.example.beproject.controller.member.Response.ResponseMember;
 import com.example.beproject.domain.jwt.JwtProvider;
 import com.example.beproject.domain.jwt.token.Token;
-import com.example.beproject.domain.member.CreateMember;
-import com.example.beproject.domain.member.Member;
-import com.example.beproject.domain.member.MemberStatus;
-import com.example.beproject.domain.member.Role;
-import com.example.beproject.entity.member.MemberEntity;
-import com.example.beproject.entity.token.TokenEntity;
+import com.example.beproject.domain.member.*;
 import com.example.beproject.exception.MemberNotFoundException;
 import com.example.beproject.repository.member.MemberRepository;
-import com.example.beproject.repository.token.TokenJpaRepository;
 import com.example.beproject.repository.token.TokenRepository;
-import jdk.jshell.spi.ExecutionControl;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -48,12 +40,33 @@ public class MemberServiceImpl implements MemberService{
         // BCrypt 알고리즘을 사용하여 패스워드를 암호화
         return encoder.encode(password);
     }
+
     @Override
     public boolean matchesPassword(String rawPassword, String encodedPassword) {
         // 암호화된 패스워드와 입력한 패스워드가 일치하는지 체크
         return encoder.matches(rawPassword, encodedPassword);
     }
 
+    @Override
+    public Member updateMember(Long id, UpdateMember updateMember) {
+        // id로 회원 정보를 조회
+        Optional<Member> optionalMember = memberRepository.findById(id);
+
+        if (optionalMember.isPresent()) {
+            Member member = optionalMember.get();
+
+            // 회원 정보 업데이트
+            member.setNickname(updateMember.getNickname());
+            member.setEmail(updateMember.getEmail());
+            member.setPassword(updateMember.getPassword());
+
+            // 회원 정보 저장 및 반환
+            return memberRepository.save(member);
+        }
+
+        // 조회한 회원이 존재하지 않는 경우 null 반환
+        return null;
+    }
 
     @Override
     @Transactional
@@ -149,15 +162,5 @@ public class MemberServiceImpl implements MemberService{
         authorities.add(new SimpleGrantedAuthority("ROLE_" + memberRole.name()));
         log.info("role : " + authorities);
         return authorities;
-    }
-
-    @Override
-    public Member update(Member member) {
-        return memberRepository.save(member);
-    }
-
-    @Override
-    public Member findById(Long id) {
-        return memberRepository.findById(id).orElse(null);
     }
 }
