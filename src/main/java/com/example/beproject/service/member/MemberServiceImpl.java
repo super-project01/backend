@@ -17,6 +17,7 @@ import jdk.jshell.spi.ExecutionControl;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -91,7 +92,6 @@ public class MemberServiceImpl implements MemberService{
 
                 if (findToken == null) {
                     log.info("발급한 토큰이 없습니다. 새로운 토큰을 발급합니다.");
-                    return tokenRepository.save(token);
                 } else {
                     log.info("이미 발급한 토큰이 있습니다. 토큰을 업데이트합니다.");
                     token = Token.builder()
@@ -104,8 +104,8 @@ public class MemberServiceImpl implements MemberService{
                             .memberEmail(token.getMemberEmail())
                             .build();
 
-                    return tokenRepository.save(token);
                 }
+                return tokenRepository.save(token);
             }
             else{
                 throw new MemberNotFoundException();
@@ -132,5 +132,15 @@ public class MemberServiceImpl implements MemberService{
         authorities.add(new SimpleGrantedAuthority("ROLE_" + memberRole.name()));
         log.info("role : " + authorities);
         return authorities;
+    }
+
+    @Override
+    public Member update(Member member) {
+        return memberRepository.save(member);
+    }
+
+    @Override
+    public Member findById(Long id) {
+        return memberRepository.findById(id).orElse(null);
     }
 }

@@ -9,6 +9,11 @@ import com.example.beproject.domain.member.Member;
 public interface MemberService {
 
     String encodePassword(String password);
+
+    Member update(Member member);
+
+    Member findById(Long id);
+
     boolean matchesPassword(String rawPassword, String encodedPassword);
 
     Member register(CreateMember member);

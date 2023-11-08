@@ -6,14 +6,14 @@ import lombok.Getter;
 @Getter
 public class UpdateMember {
 
-    private String id;
     private String email;
     private String nickname;
+    private String password;
 
     @Builder
-    public UpdateMember(String id, String email, String nickname) {
-        this.id = id;
+    public UpdateMember(String email, String nickname, String password) {
         this.email = email;
         this.nickname = nickname;
+        this.password = password;
     }
 }
