@@ -38,7 +38,7 @@ public class CommentEntity {
     @ManyToOne // 다대일(One-to-Many) : 게시글-댓글
     @JoinColumn(name = "post_id") //게시글에서 외래키를 받아오기 위해 사용
     private PostEntity post; //게시글 아이디  클래스 이름과 필드 이름이 충돌할 수 있어 넣어봄.
-    //PostEntity id 부분에 @Column 이름 변경 부탁드리기. (=충돌예방과 가독성 이유)
+    //PostEntity id 부분에 @Column git checkout이름 변경 부탁드리기. (=충돌예방과 가독성 이유)
     //PostEntity 필드를 넣으면 댓글이 어떤 게시글에 대한 댓글인지를 나타내며, 데이터베이스 테이블 간의 관계를 설정하는데 도움
 
     @Builder
