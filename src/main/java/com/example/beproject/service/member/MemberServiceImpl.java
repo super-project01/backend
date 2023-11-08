@@ -56,9 +56,14 @@ public class MemberServiceImpl implements MemberService{
             Member member = optionalMember.get();
 
             // 회원 정보 업데이트
-            member.setNickname(updateMember.getNickname());
-            member.setEmail(updateMember.getEmail());
-            member.setPassword(updateMember.getPassword());
+            member.updateMember(updateMember.getEmail(), updateMember.getNickname(), updateMember.getPassword());
+
+            // password가 빈 값인 경우 업데이트 하지 않음
+            String newPassword = updateMember.getPassword();
+
+            if (newPassword != null && !newPassword.isEmpty()) {
+                member.updateMember2(newPassword);
+            }
 
             // 회원 정보 저장 및 반환
             return memberRepository.save(member);
@@ -85,7 +90,7 @@ public class MemberServiceImpl implements MemberService{
                 .password(password)
                 .nickname(member.getNickname())
                 .status(MemberStatus.ACTIVE)
-                .role(Role.ADMIN)
+                .role(Role.USER)
                 .build();
 
         // Member 저장

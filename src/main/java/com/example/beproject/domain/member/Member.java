@@ -13,6 +13,7 @@ public class Member {
     private String nickname;
     private final MemberStatus status;
     private final Role role;
+    private String newPassword;
 
     @Builder
     public Member(Long id, String email, String password, String nickname, MemberStatus status, Role role) {
@@ -36,15 +37,14 @@ public class Member {
                 .build();
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
 
-    public void setEmail(String email) {
+    public void updateMember(String email, String nickname, String password) {
         this.email = email;
+        this.nickname = nickname;
+        this.password = password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void updateMember2(String newPassword) {
+        this.newPassword = newPassword;
     }
 }
