@@ -5,6 +5,7 @@ import com.example.beproject.domain.jwt.JwtProvider;
 import com.example.beproject.domain.jwt.token.Token;
 import com.example.beproject.domain.member.CreateMember;
 import com.example.beproject.domain.member.Member;
+import com.example.beproject.domain.member.MemberStatus;
 import com.example.beproject.domain.member.Role;
 import com.example.beproject.entity.member.MemberEntity;
 import com.example.beproject.entity.token.TokenEntity;
@@ -20,6 +21,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,12 +38,41 @@ public class MemberServiceImpl implements MemberService{
     private final TokenRepository tokenRepository;
     private final JwtProvider jwtProvider;
 
+    private final PasswordEncoder encoder;
+
+    @Override
+    public String encodePassword(String password) {
+        // BCrypt 알고리즘을 사용하여 패스워드를 암호화
+        return encoder.encode(password);
+    }
+    @Override
+    public boolean matchesPassword(String rawPassword, String encodedPassword) {
+        // 암호화된 패스워드와 입력한 패스워드가 일치하는지 체크
+        return encoder.matches(rawPassword, encodedPassword);
+    }
+
 
     @Override
     @Transactional
-    public Member register(CreateMember member) {
+    public Member register(CreateMember member) {   // 유효성 검사 (예 : 이메일 중복 체크)
 
-        return null;
+        // email 중복 검사
+        if (memberRepository.findByEmail(member.getEmail()) != null) {
+            throw new RuntimeException("이미 등록된 이메일 주소입니다.");
+        }
+
+        String password = encodePassword(member.getPassword());
+
+        // CreateMember 객체 -> Member 엔티티로 변환
+        Member newMember = Member.builder()
+                .email(member.getEmail())
+                .password(password)
+                .nickname(member.getNickname())
+                .status(MemberStatus.ACTIVE)
+                .build();
+
+        // Member 저장
+        return memberRepository.save(newMember);
     }
 
     @Override

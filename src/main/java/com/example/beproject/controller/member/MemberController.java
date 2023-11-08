@@ -5,6 +5,7 @@ import com.example.beproject.domain.jwt.token.ResponseToken;
 import com.example.beproject.domain.jwt.token.Token;
 import com.example.beproject.domain.member.CreateMember;
 import com.example.beproject.domain.member.LoginMember;
+import com.example.beproject.domain.member.Member;
 import com.example.beproject.service.member.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,19 +33,30 @@ public class MemberController {
     @Operation(summary = "회원가입", description = "회원가입 API")
     public ResponseEntity<?> join(@Validated @RequestBody CreateMember member,
                                   BindingResult result) {
+
         try{
             if (result.hasErrors()) {
                 log.info("BindingResult error : " + result.hasErrors());
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result.getClass().getSimpleName());
             }
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(null);
+            // 이메일 유효성 검사 추가
+            if (!isValidEmail(member.getEmail())) {
+                result.rejectValue("email", "email.invalid", "유효한 이메일 주소를 입력하세요.");
+                log.info("Invalid email address: " + member.getEmail());
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result.getClass().getSimpleName());
+            }
+
+            Member savedMember = memberService.register(member);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(ResponseMember.of(savedMember));
         }
         catch (Exception e)
         {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
 
     // 로그인
     @PostMapping("/login")
@@ -80,4 +92,10 @@ public class MemberController {
         return ResponseEntity.ok().body("SUCCESS");
     }
 
+    // 이메일 유효성 검사 메서드
+    private boolean isValidEmail(String email) {
+        // 이메일 주소의 유효성을 검사하는 정규 표현식
+        String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
+        return email.matches(emailRegex);
+    }
 }

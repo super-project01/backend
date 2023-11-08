@@ -8,6 +8,9 @@ import com.example.beproject.domain.member.Member;
 
 public interface MemberService {
 
+    String encodePassword(String password);
+    boolean matchesPassword(String rawPassword, String encodedPassword);
+
     Member register(CreateMember member);
 
     Token login(String email, String pw);
