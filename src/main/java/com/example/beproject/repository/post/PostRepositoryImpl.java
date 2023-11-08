@@ -14,9 +14,16 @@ public class PostRepositoryImpl implements PostRepository {
     private final PostJpaRepository postJpaRepository;
 
     @Override
-    public Post save(Post post) {
-        return null;
+    public Post createPost(Post post) {
+        return postJpaRepository.save(PostEntity.from(post)).toDTO();
     }
+
+
+//    @Override
+//    public Post update(Post post) {
+//        return postJpaRepository.save(PostEntity.from(post)).toDTO();
+//    }
+
 
     @Override
     public List<Post> findAll() {
