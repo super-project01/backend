@@ -32,7 +32,7 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @PostMapping("/")
+    @PostMapping("/join")
     @Tag(name = "MEMBER")
     @Operation(summary = "회원가입", description = "회원가입 API")
     public ResponseEntity<?> join(@Validated @RequestBody CreateMember member,
@@ -66,11 +66,7 @@ public class MemberController {
     @PutMapping("/id")
     @Tag(name = "MEMBER")
     @Operation(summary = "회원 정보 수정", description = "회원 정보 수정 API")
-    public ResponseEntity<?> updateMember(@PathVariable Long id, @Validated @RequestBody UpdateMember updateMember, BindingResult result) {
-        if (result.hasErrors()) {
-            log.info("BindingResult error: " + result.getAllErrors());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result.getAllErrors());
-        }
+    public ResponseEntity<?> updateMember(@PathVariable Long id, @RequestBody UpdateMember updateMember) {
 
         try {
             Member updatedMember = memberService.updateMember(id, updateMember);

@@ -85,7 +85,7 @@ public class MemberServiceImpl implements MemberService{
                 .password(password)
                 .nickname(member.getNickname())
                 .status(MemberStatus.ACTIVE)
-                .role(Role.ADMIN)
+                .role(Role.USER)
                 .build();
 
         // Member 저장
