@@ -6,13 +6,14 @@ import java.util.List;
 
 public interface PostRepository {
 
-    //등록
-    Post save(Post post);
+    //등록 ->return DTO
+    Post createPost(Post post);
 
     //수정
 
 
     //삭제
+
     //조회
     public List<Post> findAll();
 }
