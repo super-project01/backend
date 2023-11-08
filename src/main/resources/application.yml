@@ -4,6 +4,7 @@ spring:
       local:
         - local
     active: local
+
   devtools:
     livereload:
       enabled: true
@@ -19,3 +20,12 @@ spring:
         show_sql: true
         format_sql: true
         default_batch_fetch_size: 500
+  # swagger
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      force-response: true
