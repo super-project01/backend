@@ -26,8 +26,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -113,6 +115,21 @@ public class MemberServiceImpl implements MemberService{
         }
         catch (Exception e) {
             throw e;
+        }
+    }
+
+    public String logout(HttpServletRequest request, String email){
+        try{
+            Optional<String> refreshToken = jwtProvider.extractRefreshToken(request);
+            Optional<String> accessToken = jwtProvider.extractAccessToken(request);
+
+            Token findToken = tokenRepository.findByMemberEmail(email);
+            tokenRepository.deleteById(findToken.getId());
+
+            return "로그아웃에 성공하였습니다.";
+        }
+        catch (Exception e){
+            return "로그아웃 시 토큰 초기화에 실패하였습니다.";
         }
     }
 

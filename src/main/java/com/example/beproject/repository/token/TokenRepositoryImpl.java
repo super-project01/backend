@@ -34,4 +34,9 @@ public class TokenRepositoryImpl implements TokenRepository{
     public Token findByAccessToken(String accessToken) {
         return Token.from(tokenJpaRepository.findByAccessToken(accessToken));
     }
+
+    @Override
+    public void deleteById(Long id) {
+        tokenJpaRepository.deleteById(id);
+    }
 }

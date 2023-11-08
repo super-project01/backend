@@ -20,6 +20,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/member")
@@ -106,6 +108,14 @@ public class MemberController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("로그인을 실패했습니다.");
         }
+    }
+
+    @PostMapping("/logout")
+    @Tag(name = "MEMBER")
+    @Operation(summary = "로그인", description = "로그아웃")
+    public ResponseEntity<?> logout(HttpServletRequest request, @AuthenticationPrincipal UserDetails user) {
+        String res = memberService.logout(request, user.getUsername());
+        return ResponseEntity.ok().body(res);
     }
 
     @GetMapping("/")
