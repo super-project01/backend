@@ -6,6 +6,8 @@ import com.example.beproject.domain.jwt.token.Token;
 import com.example.beproject.domain.member.CreateMember;
 import com.example.beproject.domain.member.LoginMember;
 import com.example.beproject.domain.member.Member;
+import com.example.beproject.domain.member.UpdateMember;
+import com.example.beproject.exception.MemberNotFoundException;
 import com.example.beproject.service.member.MemberService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -59,6 +61,26 @@ public class MemberController {
         }
     }
 
+
+    // 회원 정보 수정
+    @PutMapping("/id")
+    @Tag(name = "MEMBER")
+    @Operation(summary = "회원 정보 수정", description = "회원 정보 수정 API")
+    public ResponseEntity<?> updateMember(@PathVariable Long id, @Validated @RequestBody UpdateMember updateMember, BindingResult result) {
+        if (result.hasErrors()) {
+            log.info("BindingResult error: " + result.getAllErrors());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result.getAllErrors());
+        }
+
+        try {
+            Member updatedMember = memberService.updateMember(id, updateMember);
+            return ResponseEntity.ok().body(ResponseMember.of(updatedMember));
+        } catch (MemberNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
 
     // 로그인
     @PostMapping("/login")

@@ -9,8 +9,6 @@ import javax.validation.constraints.NotBlank;
 @Getter
 public class CreateMember {
 
-    @Getter
-    private final String id;
 
     // 이메일 유효성 검사
     @NotBlank(message = "이메일은 필수 입력 항목입니다.")
@@ -20,8 +18,7 @@ public class CreateMember {
     private String nickname;
 
     @Builder
-    public CreateMember(String id, String email, String password, String nickname) {
-        this.id = id;
+    public CreateMember(String email, String password, String nickname) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
