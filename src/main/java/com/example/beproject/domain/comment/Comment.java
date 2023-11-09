@@ -9,7 +9,7 @@ import lombok.Getter;
 public class Comment {
 
     private final Long id;
-    //대댓글 아이디
+
     private final Long write;
 
     private final String contents;

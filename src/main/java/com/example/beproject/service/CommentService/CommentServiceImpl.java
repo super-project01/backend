@@ -6,13 +6,13 @@ import com.example.beproject.domain.comment.CreateComment;
 import com.example.beproject.domain.comment.UpdateComment;
 import com.example.beproject.domain.post.Post;
 import com.example.beproject.entity.comment.CommentEntity;
-import com.example.beproject.exception.CommentException;
+import com.example.beproject.exception.CommentNotFoundException;
 import com.example.beproject.repository.comment.CommentRepository;
+import com.example.beproject.repository.post.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestBody;
-
 import java.util.List;
 
 @Slf4j
@@ -21,14 +21,20 @@ import java.util.List;
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
+    private final PostRepository postRepository;
 
-    @Override //@RequestBody 이렇게 사용하는거 맞는지 물어보기
-    public Comment createComment(@RequestBody CreateComment create) {
+    @Override
+    public Comment createComment(CreateComment createComment) {
+        Long postId = createComment.getPostId();
+        Post post = postRepository.getPost(postId); //오류 getPost, postRepository에서 추가해야하는 부분? comment에서 고치거나 뺄 수 있는지
+        if (post == null) {
+            throw new CommentNotFoundException(postId);
+        }
         Comment newComment = Comment.builder()
-                .write(create.getWrite())
-                .contents(create.getContents())
+                .write(createComment.getWrite())
+                .contents(createComment.getContents())
                 .status(CommentStatus.NEW)
-                .post(Post.builder().id(create.getPostId()).build())
+                .post(post)
                 .build();
         Comment savedComment = commentRepository.save(newComment);
         return savedComment;
@@ -36,24 +42,40 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<Comment> getAllComments() {
-        List<Comment> comments = commentRepository.findAll();
-        return comments;
-    }
-
-    @Override
-    public Comment getComment(Long id) throws CommentException.CommentNotFoundException {
-        Comment comment = commentRepository.findById(id)
-                .orElseThrow(() -> new CommentException.CommentNotFoundException(id));
+        List<Comment> comment = commentRepository.findAll();
         return comment;
     }
 
     @Override
-    public Comment updateComment(Long id, @RequestBody UpdateComment updateComment) throws CommentException.CommentNotFoundException {
-        Comment existingComment = commentRepository.findById(id)
-                .orElseThrow(() -> new CommentException.CommentNotFoundException(id));
-        Comment updatedComment = commentRepository.update(existingComment);
-        return updatedComment;
-    }//setContents(String) Comment 객체가 contents 필드를 수정 및 업데이트 해야하는 경우에만 추가하면 되는데 해야하는지 물어보기.
+    public Comment getComment(Long id) throws CommentNotFoundException {
+        Comment comment = commentRepository.getComment(id);
+        if (comment == null) {
+            throw new CommentNotFoundException(id);
+        }
+        return comment;
+    }
+
+    @Override
+    public Comment updateComment(Long id, UpdateComment updateComment) throws CommentNotFoundException {
+        CommentEntity existingCommentEntity = CommentEntity.from(commentRepository.findById(id)
+                .orElseThrow(() -> new CommentNotFoundException(id)));
+        if (updateComment.getContents() != null) {
+            CommentEntity updatedEntity = CommentEntity.builder()
+                    .id(existingCommentEntity.getId())
+                    .write(existingCommentEntity.getWrite())
+                    .contents(updateComment.getContents())
+                    .orgid(existingCommentEntity.getOrgid())
+                    .subid(existingCommentEntity.getSubid())
+                    .status(existingCommentEntity.getStatus())
+                    .post(existingCommentEntity.getPost())
+                    .build();
+
+            CommentEntity savedEntity = CommentEntity.from(commentRepository.save(Comment.from(updatedEntity)));
+            return savedEntity.toDTO();
+        } else {
+            return existingCommentEntity.toDTO();
+        }
+    }
 
     @Override
     public void deleteComment(Long id) {

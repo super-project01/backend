@@ -1,7 +1,8 @@
 package com.example.beproject.repository.comment;
 
 import com.example.beproject.domain.comment.Comment;
-import com.example.beproject.exception.CommentException;
+import com.example.beproject.domain.comment.UpdateComment;
+import com.example.beproject.exception.CommentNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,10 +12,11 @@ public interface CommentRepository {
 
     Optional<Comment> findById(Long id);
 
-    Comment update(Comment comment) throws CommentException.CommentNotFoundException;
+    Comment update(Long id, UpdateComment updateComment) throws CommentNotFoundException;
 
     void delete(Long id);
 
     List<Comment> findAll();
-}
 
+    Comment getComment(Long id);
+}
