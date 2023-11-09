@@ -36,15 +36,10 @@ public class Member {
                 .build();
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void updateMember(UpdateMember member){
+        this.nickname = member.getNickname();
+        if(member.getPassword() != null)
+            this.password = member.getPassword();
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }

@@ -55,17 +55,18 @@ public class MemberServiceImpl implements MemberService{
         if (optionalMember.isPresent()) {
             Member member = optionalMember.get();
 
+            if(updateMember.getPassword() != null)
+                updateMember.setPassword(encodePassword(updateMember.getPassword()));
+
             // 회원 정보 업데이트
-            member.setNickname(updateMember.getNickname());
-            member.setEmail(updateMember.getEmail());
-            member.setPassword(updateMember.getPassword());
+            member.updateMember(updateMember);
 
             // 회원 정보 저장 및 반환
             return memberRepository.save(member);
         }
 
         // 조회한 회원이 존재하지 않는 경우 null 반환
-        return null;
+        throw new MemberNotFoundException();
     }
 
     @Override

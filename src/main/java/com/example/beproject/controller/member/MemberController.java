@@ -63,7 +63,7 @@ public class MemberController {
 
 
     // 회원 정보 수정
-    @PutMapping("/id")
+    @PutMapping("/{id}")
     @Tag(name = "MEMBER")
     @Operation(summary = "회원 정보 수정", description = "회원 정보 수정 API")
     public ResponseEntity<?> updateMember(@PathVariable Long id, @RequestBody UpdateMember updateMember) {
