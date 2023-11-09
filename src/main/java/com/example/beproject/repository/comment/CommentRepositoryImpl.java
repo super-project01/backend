@@ -1,24 +1,24 @@
 package com.example.beproject.repository.comment;
 
 import com.example.beproject.domain.comment.Comment;
+import com.example.beproject.domain.comment.UpdateComment;
 import com.example.beproject.entity.comment.CommentEntity;
-import com.example.beproject.exception.CommentException;
+import com.example.beproject.exception.CommentNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestBody;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
-public class CommentRepositoryImpl implements CommentRepository {
+public abstract class CommentRepositoryImpl implements CommentRepository {
 
     private final CommentJpaRepository commentJPARepository;
 
     @Override
-    public Comment save(@RequestBody Comment comment) {
+    public Comment save(Comment comment) {
         CommentEntity commentEntity = CommentEntity.from(comment);
         CommentEntity savedEntity = commentJPARepository.save(commentEntity);
         return savedEntity.toDTO();
@@ -30,14 +30,25 @@ public class CommentRepositoryImpl implements CommentRepository {
     }
 
     @Override
-    public Comment update(@RequestBody Comment comment) throws CommentException.CommentNotFoundException {
-        CommentEntity updatedEntity = commentJPARepository.findById(comment.getId())
-                .map(existingCommentEntity -> {
-                    existingCommentEntity.toDTO();
-                    return commentJPARepository.save(existingCommentEntity);
-                })
-                .orElseThrow(() -> new CommentException.CommentNotFoundException(comment.getId()));
-        return updatedEntity.toDTO();
+    public Comment update(Long id, UpdateComment updateComment) throws CommentNotFoundException {
+        CommentEntity existingCommentEntity = commentJPARepository.findById(id)
+                .orElseThrow(() -> new CommentNotFoundException(id));
+        if (updateComment.getContents() != null) {
+            CommentEntity updatedEntity = new CommentEntity(
+                    existingCommentEntity.getId(),
+                    existingCommentEntity.getWrite(),
+                    updateComment.getContents(),
+                    existingCommentEntity.getOrgid(),
+                    existingCommentEntity.getSubid(),
+                    existingCommentEntity.getStatus(),
+                    existingCommentEntity.getPost()
+            );
+
+            CommentEntity savedEntity = commentJPARepository.save(updatedEntity);
+            return savedEntity.toDTO();
+        } else {
+            return existingCommentEntity.toDTO();
+        }
     }
 
     @Override

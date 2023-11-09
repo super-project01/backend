@@ -1,9 +1,12 @@
 package com.example.beproject.controller.comment;
 
 import com.example.beproject.domain.comment.Comment;
+import com.example.beproject.domain.comment.CommentStatus;
 import com.example.beproject.domain.comment.CreateComment;
 import com.example.beproject.domain.comment.UpdateComment;
-import com.example.beproject.exception.CommentException;
+import com.example.beproject.domain.post.Post;
+import com.example.beproject.repository.post.PostRepository;
+import com.example.beproject.exception.CommentNotFoundException;
 import com.example.beproject.service.CommentService.CommentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,6 +24,7 @@ import java.util.List;
 public class CommentController {
 
     private final CommentService commentService;
+    private final PostRepository postRepository;
 
     @GetMapping("/")
     @Tag(name = "COMMENT")
@@ -28,15 +32,12 @@ public class CommentController {
     public ResponseEntity<List<Comment>> getAllComments() {
         List<Comment> comments = commentService.getAllComments();
         return ResponseEntity.ok(comments);
-        /** public List<Comment> getAllComments() {
-         return commentService.getAllComments(); 로도 사용가능
-         }*/
     }
 
     @GetMapping("/comment/{id}")
     @Tag(name = "COMMENT")
     @Operation(summary = "댓글 조회", description = "댓글 조회")
-    public ResponseEntity<Comment> getComment(@PathVariable Long id) throws CommentException.CommentNotFoundException {
+    public ResponseEntity<Comment> getComment(@PathVariable Long id) throws CommentNotFoundException {
         Comment comment = commentService.getComment(id);
         return ResponseEntity.ok(comment);
     }
@@ -44,7 +45,18 @@ public class CommentController {
     @PostMapping("/")
     @Tag(name = "COMMENT")
     @Operation(summary = "댓글 추가", description = "댓글 추가")
-    public ResponseEntity<Comment> createComment(@RequestBody CreateComment comment) {
+    public ResponseEntity<Comment> createComment(@RequestBody CreateComment comment) throws CommentNotFoundException.PostNotFoundException {
+        Long postId = comment.getPostId();
+        Post post = postRepository.getPost(postId); //오류 getPost
+        if (post == null) {
+            throw new CommentNotFoundException.PostNotFoundException(postId);
+        }
+        Comment newComment = Comment.builder()
+                .write(comment.getWrite())
+                .contents(comment.getContents())
+                .status(CommentStatus.NEW)
+                .post(post)
+                .build();
         Comment createdComment = commentService.createComment(comment);
         return ResponseEntity.ok(createdComment);
     }
@@ -52,7 +64,7 @@ public class CommentController {
     @PutMapping("/comment/{id}")
     @Tag(name = "COMMENT")
     @Operation(summary = "댓글 수정", description = "댓글 수정")
-    public ResponseEntity<Comment> updateComment(@PathVariable Long id, @RequestBody UpdateComment comment) throws CommentException.CommentNotFoundException {
+    public ResponseEntity<Comment> updateComment(@PathVariable Long id, @RequestBody UpdateComment comment) throws CommentNotFoundException {
         Comment updatedComment = commentService.updateComment(id, comment);
         return ResponseEntity.ok(updatedComment);
     }

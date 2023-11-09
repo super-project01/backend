@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -33,10 +34,22 @@ public class PostRepositoryImpl implements PostRepository {
                 .map(PostEntity::toDTO);
     }
 
-    @Override
-    public List<Post> findAll() {
-
-        return null;
+    public void delete(Long postId) {
+        postJpaRepository.deleteById(postId);
     }
 
+    @Override
+    public List<Post> findAll() {
+        List<PostEntity> postEntities = postJpaRepository.findAll();
+        return postEntities.stream()
+                .map(PostEntity::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Post getPost(Long postId) {
+        return postJpaRepository.findById(postId)
+                .map(PostEntity::toDTO)
+                .orElse(null);
+    }
 }
