@@ -38,7 +38,7 @@ public class Member {
 
     public void updateMember(UpdateMember member){
         this.nickname = member.getNickname();
-        if(member.getPassword() != null)
+        if(member.getPassword() != null && !member.getPassword().isEmpty())
             this.password = member.getPassword();
     }
 

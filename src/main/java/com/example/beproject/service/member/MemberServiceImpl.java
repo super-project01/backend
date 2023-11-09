@@ -55,7 +55,7 @@ public class MemberServiceImpl implements MemberService{
         if (optionalMember.isPresent()) {
             Member member = optionalMember.get();
 
-            if(updateMember.getPassword() != null)
+            if(updateMember.getPassword() != null && !updateMember.getPassword().isEmpty())
                 updateMember.setPassword(encodePassword(updateMember.getPassword()));
 
             // 회원 정보 업데이트
