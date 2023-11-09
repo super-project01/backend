@@ -4,8 +4,6 @@ import com.example.beproject.entity.post.PostEntity;
 import lombok.Builder;
 import lombok.Getter;
 
-import javax.persistence.Column;
-
 @Getter
 public class Post {
 

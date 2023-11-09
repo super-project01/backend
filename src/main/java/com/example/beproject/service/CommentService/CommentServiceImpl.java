@@ -58,7 +58,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Comment updateComment(Long id, UpdateComment updateComment) throws CommentNotFoundException {
         CommentEntity existingCommentEntity = CommentEntity.from(commentRepository.findById(id)
-                .orElseThrow(() -> new CommentNotFoundException(id)));
+                .orElseThrow(() -> new CommentNotFoundException.PostNotFoundException(id)));
         if (updateComment.getContents() != null) {
             CommentEntity updatedEntity = CommentEntity.builder()
                     .id(existingCommentEntity.getId())

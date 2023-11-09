@@ -2,6 +2,7 @@ package com.example.beproject.repository.post;
 
 import com.example.beproject.domain.post.Post;
 import com.example.beproject.entity.post.PostEntity;
+import com.example.beproject.exception.CommentNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -14,29 +15,38 @@ public class PostRepositoryImpl implements PostRepository {
 
     private final PostJpaRepository postJpaRepository;
 
-    @Override//이현아 수정 ~getPost까지
+    @Override
     public Post save(Post post) {
+        return postJpaRepository.save(PostEntity.from(post)).toDTO();
+    }
+
+    @Override
+    public Post updatePost(Post post) {
         return null;
+    }
+
+    @Override
+    public void deletePost(Long postId) {
+
+    }
+
     @Override
     public Post createPost(Post post) {
         return postJpaRepository.save(PostEntity.from(post)).toDTO();
     }
 
-
-//    @Override
-//    public Post update(Post post) {
-//        return postJpaRepository.save(PostEntity.from(post)).toDTO();
-//    }
-
-
     @Override
-    public void delete(Long postId) {
+    public void delete(Long postId) {//이현아 추가
         postJpaRepository.deleteById(postId);
     }
 
     @Override
     public Post update(Post post) {
-        return null;
+        PostEntity existingPostEntity = postJpaRepository.findById(post.getId())
+                .orElseThrow(() -> new CommentNotFoundException.PostNotFoundException(post.getId()));
+
+        PostEntity updatedEntity = postJpaRepository.save(existingPostEntity);
+        return updatedEntity.toDTO();
     }
 
     @Override
@@ -47,10 +57,17 @@ public class PostRepositoryImpl implements PostRepository {
                 .collect(Collectors.toList());
     }
 
-    @Override
+    @Override //이현아 추가
     public Post getPost(Long postId) {
         return postJpaRepository.findById(postId)
                 .map(PostEntity::toDTO)
                 .orElse(null);
     }
+
+    @Override
+    public Post createPost(Long postId) {
+        return null;//이현아 추가
+    }
+
+
 }

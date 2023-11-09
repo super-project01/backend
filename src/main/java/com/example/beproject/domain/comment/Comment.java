@@ -23,7 +23,6 @@ public class Comment {
 
     private final Post post;
 
-
     @Builder
     public Comment(Long id, Long write, String contents, Long orgid, Long subid, CommentStatus status, Post post) {
         this.id = id;
