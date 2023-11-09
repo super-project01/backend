@@ -36,7 +36,7 @@ public class CommentEntity {
     @Column(name = "comment_status")
     private CommentStatus status;
 
-    @ManyToOne // 다대일(One-to-Many) : 게시글-댓글
+    @ManyToOne(targetEntity = PostEntity.class)// 다대일(One-to-Many) : 게시글-댓글
     @JoinColumn(name = "post_id") //게시글에서 외래키를 받아오기 위해 사용
     private Post post;; //게시글 아이디  클래스 이름과 필드 이름이 충돌할 수 있어 넣어봄.
     //PostEntity id 부분에 @Column git checkout이름 변경 부탁드리기. (=충돌예방과 가독성 이유)
@@ -60,7 +60,7 @@ public class CommentEntity {
                 .orgid(comment.getOrgid())
                 .subid(comment.getSubid())
                 .status(comment.getStatus())
-                .post(PostEntity.from(comment.getPost()))
+                .post(Post.from(PostEntity.from(comment.getPost())))
                 .build();
     }
 
