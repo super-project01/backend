@@ -33,7 +33,7 @@ public class CommentController {
          }*/
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/comment/{id}")
     @Tag(name = "COMMENT")
     @Operation(summary = "댓글 조회", description = "댓글 조회")
     public ResponseEntity<Comment> getComment(@PathVariable Long id) throws CommentException.CommentNotFoundException {
@@ -49,7 +49,7 @@ public class CommentController {
         return ResponseEntity.ok(createdComment);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/comment/{id}")
     @Tag(name = "COMMENT")
     @Operation(summary = "댓글 수정", description = "댓글 수정")
     public ResponseEntity<Comment> updateComment(@PathVariable Long id, @RequestBody UpdateComment comment) throws CommentException.CommentNotFoundException {
@@ -57,7 +57,7 @@ public class CommentController {
         return ResponseEntity.ok(updatedComment);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/comment/{id}")
     @Tag(name = "COMMENT")
     @Operation(summary = "댓글 삭제", description = "댓글 삭제")
     public ResponseEntity<Void> deleteComment(@PathVariable Long id) {
