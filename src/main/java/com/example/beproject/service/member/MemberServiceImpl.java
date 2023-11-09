@@ -94,35 +94,40 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public Token login(String email, String pw) {
+    public Token login(String email, String pw) throws Exception {
         try{
             Member member = memberRepository.findByEmail(email);
 
             if(member != null) {
-                Authentication authentication = new UsernamePasswordAuthenticationToken(email, pw);
-                List<GrantedAuthority> authoritiesForUser = getAuthoritiesForUser(member);
+                if(encoder.matches(pw, member.getPassword())) {
+                    Authentication authentication = new UsernamePasswordAuthenticationToken(email, pw);
+                    List<GrantedAuthority> authoritiesForUser = getAuthoritiesForUser(member);
 
-                Token findToken = tokenRepository.findByMemberEmail(email);
+                    Token findToken = tokenRepository.findByMemberEmail(email);
 
-                // JWT 생성
-                Token token = jwtProvider.createToken(authentication, authoritiesForUser);
+                    // JWT 생성
+                    Token token = jwtProvider.createToken(authentication, authoritiesForUser);
 
-                if (findToken == null) {
-                    log.info("발급한 토큰이 없습니다. 새로운 토큰을 발급합니다.");
-                } else {
-                    log.info("이미 발급한 토큰이 있습니다. 토큰을 업데이트합니다.");
-                    token = Token.builder()
-                            .id(findToken.getId())
-                            .grantType(token.getGrantType())
-                            .accessToken(token.getAccessToken())
-                            .accessTokenTime(token.getAccessTokenTime())
-                            .refreshToken(token.getRefreshToken())
-                            .refreshTokenTime(token.getRefreshTokenTime())
-                            .memberEmail(token.getMemberEmail())
-                            .build();
+                    if (findToken == null) {
+                        log.info("발급한 토큰이 없습니다. 새로운 토큰을 발급합니다.");
+                    } else {
+                        log.info("이미 발급한 토큰이 있습니다. 토큰을 업데이트합니다.");
+                        token = Token.builder()
+                                .id(findToken.getId())
+                                .grantType(token.getGrantType())
+                                .accessToken(token.getAccessToken())
+                                .accessTokenTime(token.getAccessTokenTime())
+                                .refreshToken(token.getRefreshToken())
+                                .refreshTokenTime(token.getRefreshTokenTime())
+                                .memberEmail(token.getMemberEmail())
+                                .build();
 
+                    }
+                    return tokenRepository.save(token);
                 }
-                return tokenRepository.save(token);
+                else{
+                    throw new Exception("비밀번호가 일치하지 않습니다.");
+                }
             }
             else{
                 throw new MemberNotFoundException();

@@ -18,7 +18,7 @@ public interface MemberService {
 
     Member register(CreateMember member);
 
-    Token login(String email, String pw);
+    Token login(String email, String pw) throws Exception;
 
     public String logout(HttpServletRequest request, String email);
 

@@ -90,7 +90,7 @@ public class MemberController {
 
             return ResponseEntity.ok().body(ResponseToken.of(token));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("로그인을 실패했습니다.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
