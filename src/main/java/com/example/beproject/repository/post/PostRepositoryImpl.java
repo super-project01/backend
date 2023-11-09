@@ -2,6 +2,7 @@ package com.example.beproject.repository.post;
 
 import com.example.beproject.domain.post.Post;
 import com.example.beproject.entity.post.PostEntity;
+import com.example.beproject.exception.CommentNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

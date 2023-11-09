@@ -14,6 +14,7 @@ public interface PostRepository {
 
     //수정
     Post updatePost(Post updatedPost);
+    void deletePost(Long postId);
 
     //삭제
 

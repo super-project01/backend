@@ -12,4 +12,12 @@ public class UpdateComment {
     public UpdateComment(String contents) {
         this.contents = contents;
     }
+
+    public UpdateComment() {
+        this.contents = null;
+    }
+
+    public String getContents() {
+        return contents;
+    }
 }
