@@ -2,6 +2,7 @@ package com.example.beproject.domain.comment;
 
 import com.example.beproject.domain.post.Post;
 import com.example.beproject.entity.comment.CommentEntity;
+import com.example.beproject.entity.post.PostEntity;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -42,7 +43,7 @@ public class Comment {
                 .orgid(comment.getOrgid())
                 .subid(comment.getSubid())
                 .status(comment.getStatus())
-                .post(Post.from(comment.getPost()))
+                .post(Post.from(PostEntity.from(comment.getPost())))
                 .build();
     }// CommentEntity를 Comment로
 }

@@ -6,14 +6,14 @@ import com.example.beproject.entity.comment.CommentEntity;
 import com.example.beproject.exception.CommentNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.RequestBody;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
-public abstract class CommentRepositoryImpl implements CommentRepository {
+public class CommentRepositoryImpl implements CommentRepository {
 
     private final CommentJpaRepository commentJPARepository;
 
@@ -62,5 +62,12 @@ public abstract class CommentRepositoryImpl implements CommentRepository {
         return commentEntities.stream()
                 .map(CommentEntity::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Comment getComment(Long id) throws CommentNotFoundException {
+        return commentJPARepository.findById(id)
+                .map(CommentEntity::toDTO)
+                .orElseThrow(() -> new CommentNotFoundException(id));
     }
 }

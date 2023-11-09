@@ -49,7 +49,7 @@ public class CommentController {
         Long postId = comment.getPostId();
         Post post = postRepository.getPost(postId); //오류 getPost
         if (post == null) {
-            throw new CommentNotFoundException.PostNotFoundException(postId);
+            throw new CommentNotFoundException.PostNotFoundException("댓글을 찾을 수 없습니다."+ postId);
         }
         Comment newComment = Comment.builder()
                 .write(comment.getWrite())

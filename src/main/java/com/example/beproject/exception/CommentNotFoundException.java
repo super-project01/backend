@@ -5,10 +5,9 @@ public class CommentNotFoundException extends RuntimeException {
         super("찾을 수 없습니다." + Id);
     }
 
-    public static class PostNotFoundException extends Throwable {
-        public PostNotFoundException(Long postId) {
-            super("찾을 수 없습니다." + postId);   //중복을 피하기 위해 postid로 묶어버림
+    public static class PostNotFoundException extends RuntimeException {
+        public PostNotFoundException(String message) {
+            super("댓글을 찾을 수 없습니다. " + message);
         }
-
     }
 }
