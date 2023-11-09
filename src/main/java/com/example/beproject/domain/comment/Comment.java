@@ -1,9 +1,7 @@
 package com.example.beproject.domain.comment;
 
-import com.example.beproject.domain.member.Member;
+import com.example.beproject.domain.post.Post;
 import com.example.beproject.entity.comment.CommentEntity;
-import com.example.beproject.entity.member.MemberEntity;
-import com.example.beproject.entity.post.PostEntity;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -20,20 +18,20 @@ public class Comment {
 
     private final Long subid;
 
-    private final String status;
+    private final CommentStatus status;
 
-    private final PostEntity post;
+    private final Post post;
 
 
     @Builder
-    public Comment(Long id, Long write, String contents, Long orgid, Long subid, String status, PostEntity post) {
+    public Comment(Long id, Long write, String contents, Long orgid, Long subid, CommentStatus status, Post post) {
         this.id = id;
         this.write = write;
         this.contents = contents;
         this.orgid = orgid;
         this.subid = subid;
         this.status = status;
-        this.post  = post;
+        this.post = post;
     }
 
     public static Comment from(CommentEntity comment) {
@@ -44,7 +42,7 @@ public class Comment {
                 .orgid(comment.getOrgid())
                 .subid(comment.getSubid())
                 .status(comment.getStatus())
-                .post(comment.getPost())
+                .post(Post.from(comment.getPost()))
                 .build();
     }// CommentEntity를 Comment로
 }
