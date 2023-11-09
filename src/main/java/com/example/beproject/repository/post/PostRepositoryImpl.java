@@ -17,7 +17,17 @@ public class PostRepositoryImpl implements PostRepository {
     @Override//이현아 수정 ~getPost까지
     public Post save(Post post) {
         return null;
+    @Override
+    public Post createPost(Post post) {
+        return postJpaRepository.save(PostEntity.from(post)).toDTO();
     }
+
+
+//    @Override
+//    public Post update(Post post) {
+//        return postJpaRepository.save(PostEntity.from(post)).toDTO();
+//    }
+
 
     @Override
     public void delete(Long postId) {
