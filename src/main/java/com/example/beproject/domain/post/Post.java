@@ -37,9 +37,12 @@ public class Post {
     }
 
     public void updatePost(String subject, String detail, String tag) {
-        this.subject = subject;
-        this.detail = detail;
-        this.tag = tag;
+        if(!subject.isEmpty())
+            this.subject = subject;
+        if(!detail.isEmpty())
+            this.detail = detail;
+        if(!tag.isEmpty())
+            this.tag = tag;
     }
 
 

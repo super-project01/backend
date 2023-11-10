@@ -74,31 +74,21 @@ public class PostController {
         }
     }
 
-//
-//    // 게시글 삭제 API
-//    @PostMapping("/{postId}")
-//    public ResponseEntity<String> deletePost(@PathVariable Long postId, @RequestBody DeletePost updatePost) {
-//        postService.deletePost(postId);
-//        return ResponseEntity.ok("게시글이 삭제되었습니다.");
-//    }
 
-
-    /*
-    //게시글 수정
-    @PutMapping("/{id}")
     @Tag(name = "POST")
-    @Operation(summary = "게시글 수정", description = "게시글 수정 API")
-
-        public ResponseEntity<String> updatePost(@PathVariable Long id, @RequestBody UpdatePost updatePost) {
-            Post updatedPost = postService.updatePost(id, updatePost);
-                if (updatedPost != null) {
-                    return ResponseEntity.ok("글이 성공적으로 수정되었습니다.");
-                } else {
-                    return ResponseEntity.notFound().build();
+    @Operation(summary = "게시글 삭제", description = "게시글 삭제 API")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletePost(@PathVariable Long id) {
+        try {
+            postService.deletePost(id);
+            return new ResponseEntity<>("게시물이 성공적으로 삭제되었습니다.", HttpStatus.OK);
+        } catch (PostNotFoundException e) {
+            return new ResponseEntity<>("게시물을 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("게시물 삭제 중 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
 
-    */
+    }
 
 
 }

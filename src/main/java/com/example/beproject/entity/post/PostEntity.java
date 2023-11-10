@@ -71,9 +71,5 @@ public class PostEntity {
                 .build();
     }
 
-    // 이현아 추가
-    public Post getPost() {
-        return toDTO();
-    }
 
 }
