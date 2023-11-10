@@ -56,6 +56,7 @@ public class CommentEntity {
 
     public static CommentEntity from(Comment comment) {
         return CommentEntity.builder()
+                .id(comment.getId())
                 .write(comment.getWrite())
                 .contents(comment.getContents())
                 .orgid(comment.getOrgid())
@@ -76,4 +77,7 @@ public class CommentEntity {
                 .post(this.post.toDTO())
                 .build();
     }
+
+    public void setContents(String contents) {this.contents = contents; }
+
 }

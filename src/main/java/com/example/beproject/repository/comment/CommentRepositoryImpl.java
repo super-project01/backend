@@ -33,18 +33,10 @@ public class CommentRepositoryImpl implements CommentRepository {
     public Comment update(Long id, UpdateComment updateComment) throws CommentNotFoundException {
         CommentEntity existingCommentEntity = commentJPARepository.findById(id)
                 .orElseThrow(() -> new CommentNotFoundException(id));
-        if (updateComment.getContents() != null) {
-            CommentEntity updatedEntity = new CommentEntity(
-                    existingCommentEntity.getId(),
-                    existingCommentEntity.getWrite(),
-                    updateComment.getContents(),
-                    existingCommentEntity.getOrgid(),
-                    existingCommentEntity.getSubid(),
-                    existingCommentEntity.getStatus(),
-                    existingCommentEntity.getPost()
-            );
 
-            CommentEntity savedEntity = commentJPARepository.save(updatedEntity);
+        if (updateComment.getContents() != null) {
+            existingCommentEntity.setContents(updateComment.getContents());
+            CommentEntity savedEntity = commentJPARepository.save(existingCommentEntity);
             return savedEntity.toDTO();
         } else {
             return existingCommentEntity.toDTO();
