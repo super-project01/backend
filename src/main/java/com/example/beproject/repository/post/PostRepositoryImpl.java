@@ -33,10 +33,10 @@ public class PostRepositoryImpl implements PostRepository {
                 .map(PostEntity::toDTO);
     }
 
-    @Override
-    public List<Post> findAll() {
 
-        return null;
+    @Override
+    public void deleteById(Long id) {
+        postJpaRepository.deleteById(id);
     }
 
 }

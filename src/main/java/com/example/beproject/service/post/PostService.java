@@ -7,10 +7,9 @@ import com.example.beproject.domain.post.UpdatePost;
 
 public interface PostService {
 
-    //반환값은 front랑 정하기 나름임
-    //create -> dto
     Post createPost(CreatePost post);
 
     Post updatePost(Long id, UpdatePost updatePost);
 
+    void deletePost(Long id);
 }

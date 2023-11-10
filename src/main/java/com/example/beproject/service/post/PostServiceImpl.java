@@ -38,36 +38,6 @@ public class PostServiceImpl implements PostService {
     }
 
 
-    /*
-    @Override
-    @Transactional
-    public Post updatePost(Long id, UpdatePost updatePost) {
-        //id에 해당하는 원래 게시글 찾아와서 업데이트해주기
-        Optional<Post> isExistingPost =  postRepository.findById(id);
-        //존재하는지 확인 후 업뎃하고 repository에 저장
-        if (isExistingPost.isPresent()) {
-            Post existingPost = isExistingPost.get().toDTO();
-
-            //존재하는 게시물에 update해주기
-            existingPost = Post.builder()
-                    .id(?????)
-                    .subject(updatePost.getSubject())
-                    .detail(updatePost.getDetail())
-                    .tag(updatePost.getTag())
-                    .status(PostStatus.MODIFIED)
-                    .build();
-
-            //수정한 게시물을 repository에 저장하기
-            return  postRepository.updatePost(existingPost);
-
-        } else {
-            return null;
-        }
-
-    }
-
-    */
-
 
     @Override
     public Post updatePost(Long id, UpdatePost updatePost) {
@@ -89,13 +59,16 @@ public class PostServiceImpl implements PostService {
             }
 
             // 게시글 정보 저장 및 반환
-            return postRepository.save(post);
+            return postRepository.updatePost(post);
 
         }
         // 조회한 게시글이 존재하지 않는 경우 null 반환
         return null;
     }
 
-
+    @Override
+    public void deletePost(Long id) {
+        postRepository.deleteById(id);
+    }
 }
 
