@@ -43,7 +43,7 @@ public class PostRepositoryImpl implements PostRepository {
     @Override
     public Post update(Post post) {
         PostEntity existingPostEntity = postJpaRepository.findById(post.getId())
-                .orElseThrow(() -> new CommentNotFoundException.PostNotFoundException(post.getId()));
+                .orElseThrow(() -> new CommentNotFoundException.PostNotFoundException(post.getId().toString()));
 
         PostEntity updatedEntity = postJpaRepository.save(existingPostEntity);
         return updatedEntity.toDTO();

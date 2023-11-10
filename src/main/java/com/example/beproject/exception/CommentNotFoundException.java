@@ -6,7 +6,7 @@ public class CommentNotFoundException extends RuntimeException {
     }
 
     public static class PostNotFoundException extends RuntimeException {
-        public PostNotFoundException(Long postId) {
+        public PostNotFoundException(String postId) {
             super("댓글을 찾을 수 없습니다. " + postId);
         }
     }

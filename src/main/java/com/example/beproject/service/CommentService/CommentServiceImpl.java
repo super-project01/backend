@@ -12,7 +12,7 @@ import com.example.beproject.repository.post.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.RequestBody;
+
 import java.util.List;
 
 @Slf4j
@@ -56,26 +56,32 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Comment updateComment(Long id, UpdateComment updateComment) throws CommentNotFoundException {
-        CommentEntity existingCommentEntity = CommentEntity.from(commentRepository.findById(id)
-                .orElseThrow(() -> new CommentNotFoundException.PostNotFoundException(id)));
-        if (updateComment.getContents() != null) {
-            CommentEntity updatedEntity = CommentEntity.builder()
-                    .id(existingCommentEntity.getId())
-                    .write(existingCommentEntity.getWrite())
-                    .contents(updateComment.getContents())
-                    .orgid(existingCommentEntity.getOrgid())
-                    .subid(existingCommentEntity.getSubid())
-                    .status(existingCommentEntity.getStatus())
-                    .post(existingCommentEntity.getPost())
-                    .build();
+    public Comment updateComment(Long id, UpdateComment updateComment) {
+        try {
+            CommentEntity existingCommentEntity = CommentEntity.from(commentRepository.findById(id)
+                    .orElseThrow(() -> new CommentNotFoundException.PostNotFoundException("댓글을 찾을 수 없습니다. " + id)));
 
-            CommentEntity savedEntity = CommentEntity.from(commentRepository.save(Comment.from(updatedEntity)));
-            return savedEntity.toDTO();
-        } else {
-            return existingCommentEntity.toDTO();
+            if (updateComment.getContents() != null) {
+                CommentEntity updatedEntity = CommentEntity.builder()
+                        .id(existingCommentEntity.getId())
+                        .write(existingCommentEntity.getWrite())
+                        .contents(updateComment.getContents())
+                        .orgid(existingCommentEntity.getOrgid())
+                        .subid(existingCommentEntity.getSubid())
+                        .status(existingCommentEntity.getStatus())
+                        .post(existingCommentEntity.getPost())
+                        .build();
+
+                CommentEntity savedEntity = CommentEntity.from(commentRepository.save(Comment.from(updatedEntity)));
+                return savedEntity.toDTO();
+            } else {
+                return existingCommentEntity.toDTO();
+            }
+        } catch (CommentNotFoundException.PostNotFoundException ex) {
+            throw new CommentNotFoundException(id);
         }
     }
+
 
     @Override
     public void deleteComment(Long id) {

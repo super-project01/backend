@@ -3,7 +3,6 @@ package com.example.beproject.service.CommentService;
 import com.example.beproject.domain.comment.Comment;
 import com.example.beproject.domain.comment.CreateComment;
 import com.example.beproject.domain.comment.UpdateComment;
-import com.example.beproject.entity.comment.CommentEntity;
 import com.example.beproject.exception.CommentNotFoundException;
 
 import java.util.List;

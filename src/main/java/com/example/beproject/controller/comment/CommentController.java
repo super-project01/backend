@@ -1,10 +1,8 @@
 package com.example.beproject.controller.comment;
 
 import com.example.beproject.domain.comment.Comment;
-import com.example.beproject.domain.comment.CommentStatus;
 import com.example.beproject.domain.comment.CreateComment;
 import com.example.beproject.domain.comment.UpdateComment;
-import com.example.beproject.domain.post.Post;
 import com.example.beproject.exception.CommentNotFoundException;
 import com.example.beproject.repository.post.PostRepository;
 import com.example.beproject.service.CommentService.CommentService;
@@ -65,9 +63,13 @@ public class CommentController {
     @PutMapping("{id}")
     @Tag(name = "COMMENT")
     @Operation(summary = "댓글 수정", description = "댓글 수정")
-    public ResponseEntity<Comment> updateComment(@PathVariable Long id, @RequestBody UpdateComment comment) throws CommentNotFoundException {
-        Comment updatedComment = commentService.updateComment(id, comment);
-        return ResponseEntity.ok(updatedComment);
+    public ResponseEntity<Comment> updateComment(@PathVariable Long id, @RequestBody UpdateComment comment) {
+        try {
+            Comment updatedComment = commentService.updateComment(id, comment);
+            return ResponseEntity.ok(updatedComment);
+        } catch (CommentNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
     @DeleteMapping("{id}")
