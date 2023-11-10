@@ -42,7 +42,7 @@ public class Comment {
                 .orgid(comment.getOrgid())
                 .subid(comment.getSubid())
                 .status(comment.getStatus())
-                .post(Post.from(PostEntity.from(comment.getPost())))
+                .post(Post.from(comment.getPost()))
                 .build();
     }
 }

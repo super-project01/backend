@@ -24,10 +24,11 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment createComment(CreateComment createComment) {
-        Long postId = createComment.getPostId();
-        Post post = postRepository.getPost(postId);
+
+        Post post = postRepository.findById(createComment.getPostId());
+
         if (post == null) {
-            throw new CommentNotFoundException(postId);
+            throw new CommentNotFoundException(createComment.getPostId());
         }
         Comment newComment = Comment.builder()
                 .write(createComment.getWrite())

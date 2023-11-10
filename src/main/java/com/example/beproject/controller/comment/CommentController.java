@@ -59,7 +59,7 @@ public class CommentController {
     }
 
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     @Tag(name = "COMMENT")
     @Operation(summary = "댓글 수정", description = "댓글 수정")
     public ResponseEntity<Comment> updateComment(@PathVariable Long id, @RequestBody UpdateComment comment) {
@@ -71,7 +71,7 @@ public class CommentController {
         }
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteComment(@PathVariable Long id) {
         try {
             commentService.deleteComment(id);
