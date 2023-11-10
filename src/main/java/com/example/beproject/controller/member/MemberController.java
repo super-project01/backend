@@ -41,7 +41,7 @@ public class MemberController {
         try{
             if (result.hasErrors()) {
                 log.info("BindingResult error : " + result.hasErrors());
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result.getClass().getSimpleName());
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("EMAIL유효성 문제가 발생하였습니다.");
             }
 
             // 이메일 유효성 검사 추가
