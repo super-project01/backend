@@ -4,7 +4,6 @@ import com.example.beproject.domain.comment.Comment;
 import com.example.beproject.domain.comment.CreateComment;
 import com.example.beproject.domain.comment.UpdateComment;
 import com.example.beproject.exception.CommentNotFoundException;
-
 import java.util.List;
 
 public interface CommentService {

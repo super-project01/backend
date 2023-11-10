@@ -12,7 +12,6 @@ import com.example.beproject.repository.post.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
-
 import java.util.List;
 
 @Slf4j
@@ -26,7 +25,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Comment createComment(CreateComment createComment) {
         Long postId = createComment.getPostId();
-        Post post = postRepository.getPost(postId); //오류 getPost, postRepository에서 추가해야하는 부분? comment에서 고치거나 뺄 수 있는지
+        Post post = postRepository.getPost(postId);
         if (post == null) {
             throw new CommentNotFoundException(postId);
         }
