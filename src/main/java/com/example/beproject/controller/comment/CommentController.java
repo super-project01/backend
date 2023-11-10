@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -66,11 +67,15 @@ public class CommentController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-    @DeleteMapping("/comment/{id}")
-    @Tag(name = "COMMENT")
-    @Operation(summary = "댓글 삭제", description = "댓글 삭제")
-    public ResponseEntity<Void> deleteComment(@PathVariable Long id) {
-        commentService.deleteComment(id);
-        return ResponseEntity.noContent().build();
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<String> deleteComment(@PathVariable Long id) {
+        try {
+            commentService.deleteComment(id);
+            return new ResponseEntity<>("Comment deleted successfully", HttpStatus.OK);
+        } catch (EmptyResultDataAccessException e) {
+            return new ResponseEntity<>("Comment not found", HttpStatus.NOT_FOUND);
+        }
     }
 }
+
