@@ -3,6 +3,7 @@ import com.example.beproject.domain.post.ResponsePost;
 import com.example.beproject.domain.post.CreatePost;
 import com.example.beproject.domain.post.Post;
 import com.example.beproject.domain.post.UpdatePost;
+import com.example.beproject.exception.PostNotFoundException;
 import com.example.beproject.service.post.PostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

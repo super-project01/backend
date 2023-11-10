@@ -14,15 +14,13 @@ public interface PostRepository {
 
     //수정
     Post updatePost(Post updatedPost);
-    void deletePost(Long postId);
 
     //삭제
 
     //게시글id로 게시글 조회
     public Optional<Post> findById(long id);
 
-    void delete(Long postId);
-    //조회
+    //게시글 전체 조회
     List<Post> findAll();
 
     Post getPost(Long postId);
