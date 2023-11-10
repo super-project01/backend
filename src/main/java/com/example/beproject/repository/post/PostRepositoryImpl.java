@@ -28,11 +28,10 @@ public class PostRepositoryImpl implements PostRepository {
 
     // 주어진 ID에 해당하는 게시글을 조회하여 Optional<Post>로 반환
     @Override
-    public Optional<Post> findById(long id) {
-        Optional<PostEntity> postEntityOptional = postJpaRepository.findById(id);
+    public Post findById(long id) {
+        Post post = postJpaRepository.findById(id).orElse(null).toDTO();
 
-        return postEntityOptional
-                .map(PostEntity::toDTO);
+        return post;
     }
 
     @Override
@@ -43,12 +42,9 @@ public class PostRepositoryImpl implements PostRepository {
                 .collect(Collectors.toList());
     }
 
-    @Override //이현아 추가
-    public Post getPost(Long postId) {
-        return postJpaRepository.findById(postId)
-                .map(PostEntity::toDTO)
-                .orElse(null);
+    @Override
+    public void deleteById(Long id) {
+        postJpaRepository.deleteById(id);
     }
-
 
 }

@@ -18,10 +18,11 @@ public interface PostRepository {
     //삭제
 
     //게시글id로 게시글 조회
-    public Optional<Post> findById(long id);
+    public Post findById(long id);
 
     //게시글 전체 조회
     List<Post> findAll();
 
-    Post getPost(Long postId);
+    //삭제
+    void deleteById(Long id);
 }
