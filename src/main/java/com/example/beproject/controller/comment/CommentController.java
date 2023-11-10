@@ -37,12 +37,16 @@ public class CommentController {
         return ResponseEntity.ok(comments);
     }
 
-    @GetMapping("/comment/{id}")
+    @GetMapping("{id}")
     @Tag(name = "COMMENT")
     @Operation(summary = "댓글 조회", description = "댓글 조회")
-    public ResponseEntity<Comment> getComment(@PathVariable Long id) throws CommentNotFoundException {
-        Comment comment = commentService.getComment(id);
-        return ResponseEntity.ok(comment);
+    public ResponseEntity<?> getComment(@PathVariable Long id) {
+        try {
+            Comment comment = commentService.getComment(id);
+            return ResponseEntity.ok(comment);
+        } catch (CommentNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        }
     }
 
     @PostMapping("/")
@@ -59,13 +63,9 @@ public class CommentController {
     @PutMapping("{id}")
     @Tag(name = "COMMENT")
     @Operation(summary = "댓글 수정", description = "댓글 수정")
-    public ResponseEntity<Comment> updateComment(@PathVariable Long id, @RequestBody UpdateComment comment) {
-        try {
-            Comment updatedComment = commentService.updateComment(id, comment);
-            return ResponseEntity.ok(updatedComment);
-        } catch (CommentNotFoundException.PostNotFoundException ex) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<Comment> updateComment(@PathVariable Long id, @RequestBody UpdateComment comment) throws CommentNotFoundException {
+        Comment updatedComment = commentService.updateComment(id, comment);
+        return ResponseEntity.ok(updatedComment);
     }
 
     @DeleteMapping("{id}")
