@@ -8,9 +8,9 @@ import lombok.Getter;
 public class Member {
 
     private final Long id;
-    private final String email;
-    private final String password;
-    private final String nickname;
+    private String email;
+    private String password;
+    private String nickname;
     private final MemberStatus status;
     private final Role role;
 
@@ -34,6 +34,12 @@ public class Member {
                 .status(member.getStatus())
                 .role(member.getRole())
                 .build();
+    }
+
+    public void updateMember(UpdateMember member){
+        this.nickname = member.getNickname();
+        if(member.getPassword() != null && !member.getPassword().isEmpty())
+            this.password = member.getPassword();
     }
 
 }

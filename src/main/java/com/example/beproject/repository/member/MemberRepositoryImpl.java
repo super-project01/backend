@@ -7,6 +7,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 
 @Repository
 @RequiredArgsConstructor
@@ -19,19 +21,32 @@ public class MemberRepositoryImpl implements MemberRepository{
         return memberJPARepository.save(MemberEntity.from(member)).toDTO();
     }
 
+    // 모든 회원을 조회하여 Member 객체의 리스트로 반환
     @Override
     public List<Member> findAll() {
-        return null;
+        List<MemberEntity> memberEntities = memberJPARepository.findAll();
+
+        return memberEntities.stream()
+                .map(MemberEntity::toDTO)
+                .collect(Collectors.toList());
     }
 
+    // 주어진 ID에 해당하는 회원을 조회하여 Optional<Member>로 반환
     @Override
     public Optional<Member> findById(long id) {
-        return Optional.empty();
+        Optional<MemberEntity> memberEntityOptional = memberJPARepository.findById(id);
+
+        return memberEntityOptional
+                .map(MemberEntity::toDTO);
     }
 
     @Override
     public Member findByEmail(String email) {
         MemberEntity member = memberJPARepository.findByEmail(email);
-        return member.toDTO();
+        if (member == null) {
+            return null;
+        } else {
+            return member.toDTO();
+        }
     }
 }

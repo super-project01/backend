@@ -9,4 +9,6 @@ public interface TokenRepository {
     Token findByMemberEmail(String memberEmail);
 
     Token findByAccessToken(String accessToken);
+
+    void deleteById(Long id);
 }

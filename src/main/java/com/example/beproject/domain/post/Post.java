@@ -4,16 +4,14 @@ import com.example.beproject.entity.post.PostEntity;
 import lombok.Builder;
 import lombok.Getter;
 
-import javax.persistence.Column;
-
 @Getter
 public class Post {
 
     private final Long id;
-    private final String subject;
-    private final String detail;
+    private String subject;
+    private String detail;
     private final Long writer;
-    private final String tag;
+    private String tag;
     private final PostStatus status;
 
     @Builder
@@ -37,5 +35,15 @@ public class Post {
                 .status(post.getStatus())
                 .build();
     }
+
+    public void updatePost(String subject, String detail, String tag) {
+        if(!subject.isEmpty())
+            this.subject = subject;
+        if(!detail.isEmpty())
+            this.detail = detail;
+        if(!tag.isEmpty())
+            this.tag = tag;
+    }
+
 
 }

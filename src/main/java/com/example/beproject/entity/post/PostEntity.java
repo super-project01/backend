@@ -16,7 +16,7 @@ public class PostEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "post_id")//혹시 이거 넣어주실 수 있는지 ㅠ
+    @Column(name = "post_id")
     private Long id;
 
     @Column(name="post_subject")
@@ -36,7 +36,6 @@ public class PostEntity {
     private PostStatus status;
 
 
-
     @Builder
     public PostEntity(Long id, String subject, String detail, Long writer, String tag, PostStatus status) {
         this.id = id;
@@ -46,8 +45,6 @@ public class PostEntity {
         this.tag = tag;
         this.status = status;
     }
-
-
 
     //DTO to Entity
     public static PostEntity from(Post post){
@@ -73,7 +70,6 @@ public class PostEntity {
                 .status(this.status)
                 .build();
     }
-
 
 
 }
