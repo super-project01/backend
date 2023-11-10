@@ -11,14 +11,13 @@ public class UpdatePost {
     private final String subject;
     private final String detail;
     private final String tag;
-    private final PostStatus status;
+
 
 
     @Builder
-    public UpdatePost(String subject, String detail, String tag, PostStatus status) {
+    public UpdatePost(String subject, String detail, String tag) {
         this.subject = subject;
         this.detail = detail;
         this.tag = tag;
-        this.status = status;
     }
 }

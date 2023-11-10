@@ -1,9 +1,12 @@
 package com.example.beproject.controller.post;
 
+import com.example.beproject.controller.member.Response.ResponseMember;
 import com.example.beproject.domain.member.CreateMember;
 import com.example.beproject.domain.post.CreatePost;
 import com.example.beproject.domain.post.Post;
+import com.example.beproject.domain.post.ResponsePost;
 import com.example.beproject.domain.post.UpdatePost;
+import com.example.beproject.exception.PostNotFoundException;
 import com.example.beproject.service.post.PostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -11,7 +14,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -24,7 +30,7 @@ public class PostController {
 
     @GetMapping("/")
     @Tag(name = "POST")
-    @Operation(summary = "게시글", description = "게시글 전체조회 API입니다")
+    @Operation(summary = "게시글 전체조회", description = "게시글 전체조회 API입니다")
     public ResponseEntity<?> getAllPost(@PathVariable long id) {
 
         //Service return
@@ -35,7 +41,7 @@ public class PostController {
 
     @PostMapping("/")
     @Tag(name = "POST")
-    @Operation(summary = "게시글", description = "게시글 등록하는 API입니다")
+    @Operation(summary = "게시글 등록", description = "게시글 등록 API")
 
     public ResponseEntity<?> save(@RequestBody CreatePost post,
                                   BindingResult result) {
@@ -52,22 +58,52 @@ public class PostController {
     }
 
 
-//    @PostMapping("/")
-//    @Tag(name = "POST")
-//    @Operation(summary = "게시글", description = "게시글 수정하는 API입니다")
+    //게시글 수정
+    @PutMapping("/{id}")
+    @Tag(name = "POST")
+    @Operation(summary = "게시글 수정", description = "게시글 수정 API")
+    public ResponseEntity<?> updatePost(@PathVariable Long id,  @RequestBody UpdatePost updatePost, BindingResult result) {
+        if (result.hasErrors()) {
+            log.info("BindingResult error: " + result.getAllErrors());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result.getAllErrors());
+        }
+
+        try {
+            Post updatedMember = postService.updatePost(id, updatePost);
+
+            return ResponseEntity.ok().body(ResponsePost.of(updatedMember));
+        } catch (PostNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
 //
-//    public ResponseEntity<?> save(@RequestBody UpdatePost updatePost,
-//                                  BindingResult result) {
-//        try {
-//            if (result.hasErrors()) {
-//                log.info("BindingResult error : " + result.hasErrors());
-//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result.getClass().getSimpleName());
-//                postService.updatePost(updatePost);
-//            }
-//            return ResponseEntity.status(HttpStatus.CREATED).body(postService.updatePost(updatePost));
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-//        }
+//    // 게시글 삭제 API
+//    @PostMapping("/{postId}")
+//    public ResponseEntity<String> deletePost(@PathVariable Long postId, @RequestBody DeletePost updatePost) {
+//        postService.deletePost(postId);
+//        return ResponseEntity.ok("게시글이 삭제되었습니다.");
 //    }
+
+
+    /*
+    //게시글 수정
+    @PutMapping("/{id}")
+    @Tag(name = "POST")
+    @Operation(summary = "게시글 수정", description = "게시글 수정 API")
+
+        public ResponseEntity<String> updatePost(@PathVariable Long id, @RequestBody UpdatePost updatePost) {
+            Post updatedPost = postService.updatePost(id, updatePost);
+                if (updatedPost != null) {
+                    return ResponseEntity.ok("글이 성공적으로 수정되었습니다.");
+                } else {
+                    return ResponseEntity.notFound().build();
+        }
+    }
+
+    */
+
 
 }

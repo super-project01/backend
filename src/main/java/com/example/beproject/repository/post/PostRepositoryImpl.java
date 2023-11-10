@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -18,15 +19,24 @@ public class PostRepositoryImpl implements PostRepository {
         return postJpaRepository.save(PostEntity.from(post)).toDTO();
     }
 
+    @Override
+    public Post updatePost(Post updatedPost) {return postJpaRepository.save(PostEntity.from(updatedPost)).toDTO();
+    }
 
-//    @Override
-//    public Post update(Post post) {
-//        return postJpaRepository.save(PostEntity.from(post)).toDTO();
-//    }
 
+    // 주어진 ID에 해당하는 게시글을 조회하여 Optional<Post>로 반환
+    @Override
+    public Optional<Post> findById(long id) {
+        Optional<PostEntity> postEntityOptional = postJpaRepository.findById(id);
+
+        return postEntityOptional
+                .map(PostEntity::toDTO);
+    }
 
     @Override
     public List<Post> findAll() {
+
         return null;
     }
+
 }
