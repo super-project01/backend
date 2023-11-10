@@ -44,5 +44,5 @@ public class Comment {
                 .status(comment.getStatus())
                 .post(Post.from(PostEntity.from(comment.getPost())))
                 .build();
-    }// CommentEntity를 Comment로
+    }
 }
