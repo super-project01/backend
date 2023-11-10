@@ -22,9 +22,9 @@ import org.springframework.web.bind.annotation.*;
 public class PostController {
     private final PostService postService;
 
-    @GetMapping("/")
+    @GetMapping
     @Tag(name = "POST")
-    @Operation(summary = "게시글", description = "게시글 전체조회 API입니다")
+    @Operation(summary = "게시글전체조회", description = "게시글 전체조회 API입니다")
     public ResponseEntity<?> getAllPost(@PathVariable long id) {
 
         //Service return

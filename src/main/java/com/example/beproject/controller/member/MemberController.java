@@ -96,7 +96,7 @@ public class MemberController {
 
     @PostMapping("/logout")
     @Tag(name = "MEMBER")
-    @Operation(summary = "로그인", description = "로그아웃")
+    @Operation(summary = "로그아웃", description = "로그아웃")
     public ResponseEntity<?> logout(HttpServletRequest request, @AuthenticationPrincipal UserDetails user) {
         String res = memberService.logout(request, user.getUsername());
         return ResponseEntity.ok().body(res);
@@ -115,7 +115,7 @@ public class MemberController {
 
     @GetMapping("/test")
     @Tag(name = "TEST")
-    @Operation(summary = "테스트", description = "성공 시 SUCCESS 반환")
+    @Operation(summary = "테스트", description = "성공 정시 SUCCESS 반환")
     public ResponseEntity<?> test() {
         return ResponseEntity.ok().body("SUCCESS");
     }

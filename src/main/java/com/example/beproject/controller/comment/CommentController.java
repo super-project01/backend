@@ -26,9 +26,9 @@ public class CommentController {
     private final CommentService commentService;
     private final PostRepository postRepository;
 
-    @GetMapping("/")
+    @GetMapping
     @Tag(name = "COMMENT")
-    @Operation(summary = "댓글", description = "모든 댓글 조회")
+    @Operation(summary = "댓글전체조회", description = "모든 댓글 조회")
     public ResponseEntity<List<Comment>> getAllComments() {
         List<Comment> comments = commentService.getAllComments();
         return ResponseEntity.ok(comments);
@@ -72,6 +72,8 @@ public class CommentController {
     }
 
     @DeleteMapping("/{id}")
+    @Tag(name = "COMMENT")
+    @Operation(summary = "댓글 삭제", description = "댓글 삭제")
     public ResponseEntity<String> deleteComment(@PathVariable Long id) {
         try {
             commentService.deleteComment(id);

@@ -33,6 +33,7 @@ public class CommentEntity {
     @Column(name = "comment_subid")
     private Long subid;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "comment_status")
     private CommentStatus status;
 
