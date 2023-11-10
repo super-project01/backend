@@ -89,7 +89,7 @@ public class PostServiceImpl implements PostService {
             }
 
             // 게시글 정보 저장 및 반환
-            return postRepository.save(post);
+            return postRepository.createPost(post);
 
         }
         // 조회한 게시글이 존재하지 않는 경우 null 반환
