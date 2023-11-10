@@ -70,4 +70,5 @@ public class CommentRepositoryImpl implements CommentRepository {
                 .map(CommentEntity::toDTO)
                 .orElseThrow(() -> new CommentNotFoundException(id));
     }
+
 }

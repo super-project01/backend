@@ -19,4 +19,5 @@ public interface CommentRepository {
     List<Comment> findAll();
 
     Comment getComment(Long id);
+
 }
