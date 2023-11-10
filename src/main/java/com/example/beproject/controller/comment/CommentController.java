@@ -45,20 +45,22 @@ public class CommentController {
             Comment comment = commentService.getComment(id);
             return ResponseEntity.ok(comment);
         } catch (CommentNotFoundException ex) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("댓글을 찾을 수 없습니다");
         }
     }
 
     @PostMapping("/")
-    public <CommentRequest> ResponseEntity<String> createComment(@RequestBody CommentRequest commentRequest) {
+    @Tag(name = "COMMENT")
+    @Operation(summary = "댓글 생성", description = "댓글 생성")
+    public ResponseEntity<?> createComment(@RequestBody CreateComment createComment) {
         try {
-            return new ResponseEntity<>("댓글이 성공적으로 생성되었습니다.", HttpStatus.OK);
-        } catch (CommentNotFoundException | CommentNotFoundException.PostNotFoundException ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>("댓글 생성 중에 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+            Comment comment = commentService.createComment(createComment);
+            return ResponseEntity.ok(comment);
+        } catch (CommentNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
         }
     }
+
 
     @PutMapping("{id}")
     @Tag(name = "COMMENT")
@@ -72,9 +74,9 @@ public class CommentController {
     public ResponseEntity<String> deleteComment(@PathVariable Long id) {
         try {
             commentService.deleteComment(id);
-            return new ResponseEntity<>("Comment deleted successfully", HttpStatus.OK);
+            return new ResponseEntity<>("삭제 성공", HttpStatus.OK);
         } catch (EmptyResultDataAccessException e) {
-            return new ResponseEntity<>("Comment not found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("댓글을 찾을 수 없습니다", HttpStatus.NOT_FOUND);
         }
     }
 }
