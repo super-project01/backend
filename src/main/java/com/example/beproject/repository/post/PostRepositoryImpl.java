@@ -2,11 +2,13 @@ package com.example.beproject.repository.post;
 
 import com.example.beproject.domain.post.Post;
 import com.example.beproject.entity.post.PostEntity;
+import com.example.beproject.exception.CommentNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -35,8 +37,18 @@ public class PostRepositoryImpl implements PostRepository {
 
     @Override
     public List<Post> findAll() {
-
-        return null;
+        List<PostEntity> postEntities = postJpaRepository.findAll();
+        return postEntities.stream()
+                .map(PostEntity::toDTO)
+                .collect(Collectors.toList());
     }
+
+    @Override //이현아 추가
+    public Post getPost(Long postId) {
+        return postJpaRepository.findById(postId)
+                .map(PostEntity::toDTO)
+                .orElse(null);
+    }
+
 
 }

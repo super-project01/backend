@@ -36,7 +36,6 @@ public class PostEntity {
     private PostStatus status;
 
 
-
     @Builder
     public PostEntity(Long id, String subject, String detail, Long writer, String tag, PostStatus status) {
         this.id = id;
@@ -46,8 +45,6 @@ public class PostEntity {
         this.tag = tag;
         this.status = status;
     }
-
-
 
     //DTO to Entity
     public static PostEntity from(Post post){
@@ -74,6 +71,9 @@ public class PostEntity {
                 .build();
     }
 
-
+    // 이현아 추가
+    public Post getPost() {
+        return toDTO();
+    }
 
 }

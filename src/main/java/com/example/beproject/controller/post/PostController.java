@@ -1,10 +1,7 @@
 package com.example.beproject.controller.post;
-
-import com.example.beproject.controller.member.Response.ResponseMember;
-import com.example.beproject.domain.member.CreateMember;
+import com.example.beproject.domain.post.ResponsePost;
 import com.example.beproject.domain.post.CreatePost;
 import com.example.beproject.domain.post.Post;
-import com.example.beproject.domain.post.ResponsePost;
 import com.example.beproject.domain.post.UpdatePost;
 import com.example.beproject.exception.PostNotFoundException;
 import com.example.beproject.service.post.PostService;
@@ -14,10 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -30,10 +24,11 @@ public class PostController {
 
     @GetMapping("/")
     @Tag(name = "POST")
-    @Operation(summary = "게시글 전체조회", description = "게시글 전체조회 API입니다")
+    @Operation(summary = "게시글", description = "게시글 전체조회 API입니다")
     public ResponseEntity<?> getAllPost(@PathVariable long id) {
 
         //Service return
+
         return ResponseEntity.ok()
                 .body("Service return");
     }
